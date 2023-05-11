@@ -10,7 +10,7 @@ export default class _Document extends Document {
     return (
       <Html>
         <Head />
-        <body>
+        <body style={{ minHeight: '100vh' }}>
           <Main />
           <NextScript />
         </body>
