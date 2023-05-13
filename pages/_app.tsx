@@ -1,10 +1,9 @@
-import "../styles/globals.css";
-import { useState } from "react";
-import type { AppProps } from "next/app";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
-import { MantineProvider } from "@mantine/core";
+import { Session, SessionContextProvider } from "@supabase/auth-helpers-react";
+import type { AppProps } from "next/app";
+import { useState } from "react";
 import { Toaster } from "react-hot-toast";
+import "../styles/globals.css";
 
 function MyApp({
   Component,
@@ -19,23 +18,8 @@ function MyApp({
       supabaseClient={supabaseClient}
       initialSession={pageProps.initialSession}
     >
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{
-          colorScheme: "light",
-          breakpoints: {
-            xs: 500,
-            sm: 800,
-            md: 1000,
-            lg: 1200,
-            xl: 1400,
-          },
-        }}
-      >
-        <Toaster />
-        <Component {...pageProps} />
-      </MantineProvider>
+      <Toaster />
+      <Component {...pageProps} />
     </SessionContextProvider>
   );
 }

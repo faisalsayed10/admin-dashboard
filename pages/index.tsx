@@ -1,4 +1,3 @@
-import { AppShell, LoadingOverlay } from "@mantine/core";
 import {
   User,
   createServerSupabaseClient,
@@ -8,8 +7,6 @@ import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import AdminDashboard from "../components/AdminDashboard";
-import Header from "../components/Header";
-import Navbar from "../components/Navbar";
 import UserDashboard from "../components/UserDashboard";
 import ChooseRole from "../components/ChooseRole";
 import { toast } from "react-hot-toast";
@@ -51,32 +48,14 @@ export default function Home({ user }: { user: User }) {
     }
   }
 
-  if (loading) return <LoadingOverlay visible={loading} />;
+  if (!info || loading) return <p>Loading...</p>;
   if (info && !info.role) return <ChooseRole />;
 
-  return (
-    <AppShell
-      padding="md"
-      navbar={<Navbar />}
-      header={<Header />}
-      styles={(theme) => ({
-        main: {
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
-        },
-        body: { minHeight: "calc(100vh - 60px)" },
-      })}
-    >
-      <LoadingOverlay visible={!info || loading} />
-      {info?.role === "admin" ? (
-        <AdminDashboard />
-      ) : info?.role === "user" ? (
-        <UserDashboard />
-      ) : null}
-    </AppShell>
-  );
+  return info?.role === "admin" ? (
+    <AdminDashboard />
+  ) : info?.role === "user" ? (
+    <UserDashboard />
+  ) : null;
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {

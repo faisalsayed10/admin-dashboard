@@ -1,4 +1,3 @@
-import { Button, Card, Container, Text, Title } from "@mantine/core";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -22,25 +21,23 @@ const ChooseRole = (props: Props) => {
   };
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        flexDirection: "column",
-      }}
-    >
-      <Title order={1}>Choose Your Role</Title>
-      <Card sx={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <Button onClick={() => updateRole("admin")} variant="outline">
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-2xl font-bold">Choose your role</h1>
+      <div className="flex gap-4 mt-4">
+        <button
+          onClick={() => updateRole("admin")}
+          className="px-4 py-2 text-white bg-blue-600 rounded-md"
+        >
           Admin
-        </Button>
-        <Button onClick={() => updateRole("user")} variant="outline">
+        </button>
+        <button
+          onClick={() => updateRole("user")}
+          className="px-4 py-2 text-white bg-blue-600 rounded-md"
+        >
           User
-        </Button>
-      </Card>
-    </Container>
+        </button>
+      </div>
+    </div>
   );
 };
 
