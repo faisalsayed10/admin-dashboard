@@ -1,4 +1,3 @@
-import { Card, Container } from "@mantine/core";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
@@ -15,24 +14,16 @@ const LoginPage = () => {
   }, [user]);
 
   return (
-    <Container
-      sx={{
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-      }}
-    >
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1>Tasks Dashboard</h1>
-      <Card shadow="sm" p="lg" radius="md" withBorder sx={{ width: 400 }}>
+      <div className="shadow-md p-6 rounded-md w-96 border">
         <Auth
           redirectTo="http://localhost:3000/"
           appearance={{ theme: ThemeSupa }}
           supabaseClient={supabaseClient}
         />
-      </Card>
-    </Container>
+      </div>
+    </div>
   );
 };
 
