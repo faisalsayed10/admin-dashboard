@@ -15,7 +15,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1>Tasks Dashboard</h1>
+      <h1 className="text-xl font-medium">Tasks Dashboard</h1>
       <div className="shadow-md p-6 rounded-md w-96 border">
         <Auth
           redirectTo="http://localhost:3000/"
