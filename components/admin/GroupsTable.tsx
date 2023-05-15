@@ -1,108 +1,113 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { ThreeDots } from "react-loader-spinner";
+import { Group, Member, Project } from "../../lib/types";
+import Table from "../core/Table";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { toast } from "react-hot-toast";
 
-type Props = {};
-const people = [
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    role: "Member",
-  },
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    role: "Member",
-  },
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    role: "Member",
-  },
-];
+type Props = {
+  groups: Group[] | undefined;
+};
 
-const GroupsTable = (props: Props) => {
+const GroupsTable: React.FC<Props> = ({ groups }) => {
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">
-            Groups
-          </h1>
-          <p className="mt-2 text-sm text-gray-700">
-            A list of all the groups in your account including their name, title,
-            email and role.
-          </p>
-        </div>
-        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <button
-            type="button"
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+    <Table
+      hasEndButton
+      button="Create group"
+      cols={["Name", "Members", "Tasks"]}
+      description="A list of all the groups currently in the system."
+      heading="Groups"
+      onBtnClick={() => console.log("Add group")}
+    >
+      {groups && groups.length < 1 && (
+        <tr>
+          <td
+            colSpan={3}
+            className="px-3 py-4 text-sm text-gray-900 font-medium"
           >
-            Add group
-          </button>
-        </div>
-      </div>
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                    >
-                      Name
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Title
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      Role
-                    </th>
-                    <th
-                      scope="col"
-                      className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                    >
-                      <span className="sr-only">Edit</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {people.map((person, i) => (
-                    <tr key={i}>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                        {person.name}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {person.title}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {person.role}
-                      </td>
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <a
-                          href="#"
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            No groups found. Click on the button above to create a new group.
+          </td>
+        </tr>
+      )}
+      {groups ? (
+        groups.map((group, i) => <GroupRow group={group} />)
+      ) : (
+        <tr>
+          <td
+            colSpan={4}
+            className="px-3 py-4 text-sm text-gray-900 font-medium"
+          >
+            <ThreeDots
+              height="40"
+              width="40"
+              radius="9"
+              color="#000"
+              ariaLabel="three-dots-loading"
+              wrapperClass="w-full h-full flex items-center justify-center"
+              visible={true}
+            />
+          </td>
+        </tr>
+      )}
+    </Table>
+  );
+};
+
+const GroupRow = ({ group }: { group: Group }) => {
+  const [members, setMembers] = React.useState<Member[]>();
+  const [projects, setProjects] = React.useState<Project[]>();
+  const supabase = useSupabaseClient();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from("projects")
+          .select("*")
+          .filter("assigned_group", "eq", group.id);
+
+        if (error) throw error;
+
+        setProjects(data as Project[]);
+
+        const { data: membersData, error: membersError } = await supabase
+          .from("members")
+          .select("*")
+          .filter("group_id", "eq", group.id);
+
+        if (membersError) throw membersError;
+
+        setMembers(membersData as Member[]);
+      } catch (err) {
+        console.error(err);
+        toast.error("Error fetching projects");
+      }
+    })();
+  }, [group]);
+
+  return (
+    <tr key={group.id}>
+      <td className="whitespace-nowrap capitalize px-3 py-4 text-sm text-gray-900 font-medium">
+        {group.name}
+      </td>
+      <td
+        align="center"
+        className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+      >
+        {members?.length || 0}
+      </td>
+      <td
+        align="center"
+        className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+      >
+        {projects?.length || 0}
+      </td>
+      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+        <a href="#" className="text-indigo-600 hover:text-indigo-900">
+          View
+        </a>
+      </td>
+    </tr>
   );
 };
 
