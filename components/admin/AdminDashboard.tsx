@@ -14,10 +14,10 @@ type Props = {};
 
 const AdminDashboard = (props: Props) => {
   const supabase = useSupabaseClient();
-  const [groups, setGroups] = useState<any>([]);
-  const [projects, setProjects] = useState<any>([]);
-  const [users, setUsers] = useState<any>([]);
-  const [tasks, setTasks] = useState<any>([]);
+  const [groups, setGroups] = useState<Group[] | undefined>();
+  const [projects, setProjects] = useState<Project[] | undefined>();
+  const [users, setUsers] = useState<User[] | undefined>();
+  const [tasks, setTasks] = useState<Task[] | undefined>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -33,10 +33,14 @@ const AdminDashboard = (props: Props) => {
 
   return (
     <div className="grid gap-y-8 md:grid-cols-2">
-      <UsersTable />
-      <GroupsTable />
-      <ProjectsTable />
-      <TasksTable />
+      <UsersTable users={users} />
+      <GroupsTable groups={groups} />
+      <div className="col-span-2">
+        <ProjectsTable projects={projects} />
+      </div>
+      <div className="col-span-2">
+        <TasksTable tasks={tasks} />
+      </div>
     </div>
   );
 };

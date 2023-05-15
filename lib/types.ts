@@ -10,6 +10,13 @@ export type User = {
   role: "admin" | "user";
 };
 
+export type Member = {
+  id: number;
+  user_id: string;
+  group_id: number;
+  created_at: Date;
+}
+
 export type Project = {
   id: number;
   name: string;
