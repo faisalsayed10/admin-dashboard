@@ -23,6 +23,7 @@ const UsersTable: React.FC<Props> = ({ users }) => {
       await fetch("/api/invite", {
         method: "POST",
         body: JSON.stringify({ emails }),
+        headers: { "Content-Type": "application/json" },
       });
       setLoading(false);
       closeModal();

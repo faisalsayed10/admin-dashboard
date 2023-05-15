@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { emails } = req.body;
+    const emails = (req.body.emails || "").split(",");
     const supabase = createServerSupabaseClient({ req, res });
 
     const { user } = (await supabase.auth.getUser()).data;
@@ -22,9 +22,9 @@ export default async function handler(
     if (details?.role !== "admin")
       return res.status(401).json({ error: "Unauthorized" });
 
-    emails.split(",").forEach(async (email: string) => {
-      await supabaseAdmin.auth.admin.inviteUserByEmail(email);
-    });
+    for await (const email of emails) {
+      await supabaseAdmin.auth.admin.inviteUserByEmail(email.trim());
+    }
 
     return res.status(200).json({ message: "Success" });
   } catch (error: any) {
