@@ -1,10 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Project, User } from "../../lib/types";
-import Table from "../core/Table";
-import { RotatingLines, ThreeDots } from "react-loader-spinner";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { toast } from "react-hot-toast";
 import { Dialog, Transition } from "@headlessui/react";
+import React, { Fragment, useState } from "react";
+import { toast } from "react-hot-toast";
+import { RotatingLines } from "react-loader-spinner";
+import { User } from "../../../lib/types";
+import Table from "../../ui/Table";
+import TableEmpty from "../../ui/TableEmpty";
+import TableLoading from "../../ui/TableLoading";
+import UserRow from "./UserRow";
 
 type Props = {
   users: User[] | undefined;
@@ -45,34 +47,12 @@ const UsersTable: React.FC<Props> = ({ users }) => {
         onBtnClick={openModal}
       >
         {users && users.length < 1 && (
-          <tr>
-            <td
-              colSpan={3}
-              className="px-3 py-4 text-sm text-gray-900 font-medium"
-            >
-              No users found
-            </td>
-          </tr>
+          <TableEmpty colSpan={4} message="No users found." />
         )}
         {users ? (
-          users.map((person) => <UserRow person={person} />)
+          users.map((person) => <UserRow key={person.id} person={person} />)
         ) : (
-          <tr>
-            <td
-              colSpan={4}
-              className="px-3 py-4 text-sm text-gray-900 font-medium"
-            >
-              <ThreeDots
-                height="40"
-                width="40"
-                radius="9"
-                color="#000"
-                ariaLabel="three-dots-loading"
-                wrapperClass="w-full h-full flex items-center justify-center"
-                visible={true}
-              />
-            </td>
-          </tr>
+          <TableLoading colSpan={4} />
         )}
       </Table>
       <Transition appear show={open} as={Fragment}>
@@ -149,51 +129,6 @@ const UsersTable: React.FC<Props> = ({ users }) => {
         </Dialog>
       </Transition>
     </>
-  );
-};
-
-const UserRow = ({ person }: { person: User }) => {
-  const [projects, setProjects] = React.useState<Project[]>();
-  const supabase = useSupabaseClient();
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data, error } = await supabase
-          .from("projects")
-          .select("*")
-          .filter("assigned_user", "eq", person.id);
-
-        if (error) throw error;
-
-        setProjects(data as Project[]);
-      } catch (err) {
-        console.error(err);
-        toast.error("Error fetching projects");
-      }
-    })();
-  }, [person]);
-
-  return (
-    <tr key={person.id}>
-      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900 font-medium">
-        {person.email}
-      </td>
-      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-        {person.role}
-      </td>
-      <td
-        align="center"
-        className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-      >
-        {projects?.length || 0}
-      </td>
-      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-          View
-        </a>
-      </td>
-    </tr>
   );
 };
 
