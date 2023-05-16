@@ -1,7 +1,7 @@
 import React from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { Task } from "../../lib/types";
-import Table from "../core/Table";
+import Table from "../ui/Table";
 
 type Props = {
   tasks: Task[] | undefined;
