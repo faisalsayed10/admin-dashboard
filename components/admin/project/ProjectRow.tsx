@@ -15,10 +15,10 @@ type Props = {
 
 const ProjectRow = ({ project, users, groups }: Props) => {
   const supabase = useSupabaseClient();
-  const [assignee, setAssignee] = useState("");
   const [selected, setSelected] = useState<any>("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [assignee, setAssignee] = useState("");
 
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
@@ -26,15 +26,11 @@ const ProjectRow = ({ project, users, groups }: Props) => {
   useEffect(() => {
     (async () => {
       if (project.assigned_group) {
-        setAssignee(
-          groups.find((group) => group.id === project.assigned_group)?.name
-        );
-        setSelected(project.assigned_group);
+        setSelected(project.assigned_group.id);
+        setAssignee(project.assigned_group.name);
       } else if (project.assigned_user) {
-        setAssignee(
-          users.find((user) => user.id === project.assigned_user)?.email
-        );
-        setSelected(project.assigned_user);
+        setSelected(project.assigned_user.id);
+        setAssignee(project.assigned_user.email);
       }
     })();
   }, [project]);
@@ -42,7 +38,7 @@ const ProjectRow = ({ project, users, groups }: Props) => {
   const handleEdit = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("projects")
         .update({
           ...(isNaN(Number(selected))
@@ -55,7 +51,7 @@ const ProjectRow = ({ project, users, groups }: Props) => {
       if (error) throw error;
 
       if (isNaN(Number(selected))) {
-        setAssignee(users.find((user) => user.id === selected)?.email);
+        setAssignee(users.find((user) => user.id === Number(selected))?.email);
       } else {
         setAssignee(
           groups.find((group) => group.id === Number(selected))?.name
@@ -88,11 +84,6 @@ const ProjectRow = ({ project, users, groups }: Props) => {
           ) : (
             "Unassigned"
           )}
-        </td>
-        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-          <a href="#" className="text-indigo-600 hover:text-indigo-900">
-            View
-          </a>
         </td>
       </tr>
       <Modal open={open} closeModal={closeModal} title="Change Assignee">

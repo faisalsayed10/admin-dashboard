@@ -24,10 +24,10 @@ const ProjectsTable: React.FC<Props> = ({ projects, users, groups }) => {
   const closeModal = () => setOpen(false);
 
   const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
     try {
+      e.preventDefault();
+      if (!name.trim()) throw new Error("Please enter a name for the project.");
+      setLoading(true);
       const { data, error } = await supabase
         .from("projects")
         .insert({
@@ -45,8 +45,8 @@ const ProjectsTable: React.FC<Props> = ({ projects, users, groups }) => {
         id: data?.[0].id,
         name,
         ...(isNaN(Number(selected))
-          ? { assigned_user: selected }
-          : { assigned_group: Number(selected) }),
+          ? { assigned_user: { id: selected, email: "" } }
+          : { assigned_group: { id: Number(selected), name: "" } }),
       });
       setLoading(false);
       closeModal();
@@ -61,7 +61,6 @@ const ProjectsTable: React.FC<Props> = ({ projects, users, groups }) => {
   return (
     <>
       <Table
-        hasEndButton
         button="Create project"
         cols={["Name", "Assigned to"]}
         description="A list of all the projects currently in the system."

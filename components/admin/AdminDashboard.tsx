@@ -28,11 +28,11 @@ const AdminDashboard = () => {
 
   return (
     <div className="grid gap-y-8 md:grid-cols-2">
-      <UsersTable users={users} />
-      <GroupsTable groups={groups} users={users} />
       <div className="col-span-2">
-        <ProjectsTable projects={projects} groups={groups} users={users} />
+        <UsersTable users={users} />
       </div>
+      <GroupsTable groups={groups} users={users} />
+      <ProjectsTable projects={projects} groups={groups} users={users} />
       <div className="col-span-2">
         <TasksTable tasks={tasks} />
       </div>

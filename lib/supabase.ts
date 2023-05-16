@@ -20,7 +20,12 @@ export const getAllGroups = async () => {
 
 export const getAllProjects = async () => {
   try {
-    let { data, error, status } = await supabase.from("projects").select(`*`);
+    let { data, error, status } = await supabase.from("projects").select(`
+      id,
+      name,
+      assigned_group ( id, name ),
+      assigned_user ( id, email )
+    `);
     if (error && status !== 406) throw error;
     return data as Project[];
   } catch (error: any) {

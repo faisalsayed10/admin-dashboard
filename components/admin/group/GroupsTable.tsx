@@ -27,6 +27,7 @@ const GroupsTable: React.FC<Props> = ({ groups, users }) => {
   const handleCreate = async (e: React.FormEvent) => {
     try {
       e.preventDefault();
+      if (!name.trim()) throw new Error("Please enter a name for the group.");
       setLoading(true);
 
       const { data, error } = await supabase

@@ -39,7 +39,6 @@ const UsersTable: React.FC<Props> = ({ users }) => {
   return (
     <>
       <Table
-        hasEndButton
         button="Invite users"
         cols={["Email", "Role", "Tasks"]}
         description="A list of all the users currently in the system."

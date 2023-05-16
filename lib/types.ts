@@ -15,14 +15,14 @@ export type Member = {
   user_id: string;
   group_id: number;
   created_at: Date;
-}
+};
 
 export type Project = {
   id: number;
   name: string;
   created_at: Date;
-  assigned_group?: number;
-  assigned_user?: string;
+  assigned_group?: { id: number; name: string };
+  assigned_user?: { id: string; email: string };
 };
 
 export type Task = {
