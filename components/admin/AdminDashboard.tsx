@@ -6,7 +6,7 @@ import {
   getAllUsers,
 } from "../../lib/supabase";
 import { Group, Project, Task, User } from "../../lib/types";
-import TasksTable from "./TasksTable";
+import TasksTable from "./task/TasksTable";
 import GroupsTable from "./group/GroupsTable";
 import ProjectsTable from "./project/ProjectsTable";
 import UsersTable from "./user/UsersTable";
@@ -31,10 +31,15 @@ const AdminDashboard = () => {
       <div className="col-span-2">
         <UsersTable users={users} />
       </div>
-      <GroupsTable groups={groups} users={users} />
-      <ProjectsTable projects={projects} groups={groups} users={users} />
+      <GroupsTable groups={groups} setGroups={setGroups} users={users} />
+      <ProjectsTable
+        projects={projects}
+        setProjects={setProjects}
+        groups={groups}
+        users={users}
+      />
       <div className="col-span-2">
-        <TasksTable tasks={tasks} />
+        <TasksTable tasks={tasks} projects={projects} />
       </div>
     </div>
   );
