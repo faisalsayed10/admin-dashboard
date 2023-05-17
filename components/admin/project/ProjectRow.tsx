@@ -2,8 +2,8 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { RotatingLines } from "react-loader-spinner";
 import { Project } from "../../../lib/types";
+import Button from "../../ui/Button";
 import Modal from "../../ui/Modal";
 import SingleSelect from "../../ui/SingleSelect";
 
@@ -51,7 +51,7 @@ const ProjectRow = ({ project, users, groups }: Props) => {
       if (error) throw error;
 
       if (isNaN(Number(selected))) {
-        setAssignee(users.find((user) => user.id === Number(selected))?.email);
+        setAssignee(users.find((user) => user.id === selected)?.email);
       } else {
         setAssignee(
           groups.find((group) => group.id === Number(selected))?.name
@@ -97,24 +97,9 @@ const ProjectRow = ({ project, users, groups }: Props) => {
             }))}
           />
         </div>
-        <button
-          type="button"
-          onClick={handleEdit}
-          disabled={loading}
-          className="inline-flex mt-2 justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none sm:text-sm disabled:opacity-50"
-        >
-          {loading ? (
-            <RotatingLines
-              strokeColor="grey"
-              strokeWidth="2"
-              animationDuration="0.75"
-              width="16"
-              visible={true}
-            />
-          ) : (
-            "Invite"
-          )}
-        </button>
+        <Button loading={loading} onClick={handleEdit}>
+          Edit
+        </Button>
       </Modal>
     </>
   );

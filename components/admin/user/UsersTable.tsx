@@ -1,8 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
 import { toast } from "react-hot-toast";
-import { RotatingLines } from "react-loader-spinner";
 import { User } from "../../../lib/types";
+import Button from "../../ui/Button";
 import Table from "../../ui/Table";
 import TableEmpty from "../../ui/TableEmpty";
 import TableLoading from "../../ui/TableLoading";
@@ -46,12 +46,12 @@ const UsersTable: React.FC<Props> = ({ users }) => {
         onBtnClick={openModal}
       >
         {users && users.length < 1 && (
-          <TableEmpty colSpan={4} message="No users found." />
+          <TableEmpty colSpan={3} message="No users found." />
         )}
         {users ? (
           users.map((person) => <UserRow key={person.id} person={person} />)
         ) : (
-          <TableLoading colSpan={4} />
+          <TableLoading colSpan={3} />
         )}
       </Table>
       <Transition appear show={open} as={Fragment}>
@@ -103,24 +103,9 @@ const UsersTable: React.FC<Props> = ({ users }) => {
                       placeholder="john@doe.com, example@example.com"
                     />
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleInvite}
-                    disabled={loading}
-                    className="inline-flex mt-2 justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none sm:text-sm disabled:opacity-50"
-                  >
-                    {loading ? (
-                      <RotatingLines
-                        strokeColor="grey"
-                        strokeWidth="2"
-                        animationDuration="0.75"
-                        width="16"
-                        visible={true}
-                      />
-                    ) : (
-                      "Invite"
-                    )}
-                  </button>
+                  <Button loading={loading} onClick={handleInvite}>
+                    Invite
+                  </Button>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

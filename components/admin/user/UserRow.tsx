@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Project, User } from "../../../lib/types";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { Project, User } from "../../../lib/types";
 
 const UserRow = ({ person }: { person: User }) => {
   const [projects, setProjects] = useState<Project[]>();

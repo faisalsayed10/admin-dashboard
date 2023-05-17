@@ -12,7 +12,7 @@ const SingleSelect: React.FC<Props> = ({ items, selected, setSelected }) => {
   return (
     <div className="w-full">
       <Listbox value={selected} onChange={setSelected}>
-        <div className="relative mt-1">
+        <div className="relative">
           <Listbox.Button className="relative w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline placeholder:text-gray-400 bg-white pl-3 pr-10 text-left focus-visible:border-indigo-500 focus-visible:ring-0 sm:text-sm">
             <span className="block truncate">
               {items.find((i) => i.value === selected)?.label ||
@@ -32,7 +32,7 @@ const SingleSelect: React.FC<Props> = ({ items, selected, setSelected }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto z-[100] rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto z-20 rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {items.map((item) => (
                 <Listbox.Option
                   key={item.value}

@@ -1,7 +1,7 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
-import { Group, Member, Project } from "../../../lib/types";
 import { toast } from "react-hot-toast";
+import { Group, Member, Project } from "../../../lib/types";
 
 const GroupRow = ({ group }: { group: Group }) => {
   const [members, setMembers] = useState<Member[]>();

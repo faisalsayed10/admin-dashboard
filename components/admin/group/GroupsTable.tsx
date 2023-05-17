@@ -1,8 +1,8 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
-import { RotatingLines } from "react-loader-spinner";
 import { Group, User } from "../../../lib/types";
+import Button from "../../ui/Button";
 import Modal from "../../ui/Modal";
 import MultiSelect from "../../ui/MultiSelect";
 import Table from "../../ui/Table";
@@ -13,9 +13,10 @@ import GroupRow from "./GroupRow";
 type Props = {
   groups: Group[] | undefined;
   users: User[] | undefined;
+  setGroups: React.Dispatch<React.SetStateAction<Group[] | undefined>>;
 };
 
-const GroupsTable: React.FC<Props> = ({ groups, users }) => {
+const GroupsTable: React.FC<Props> = ({ groups, users, setGroups }) => {
   const supabase = useSupabaseClient();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,10 @@ const GroupsTable: React.FC<Props> = ({ groups, users }) => {
         }))
       );
       if (membersError) throw membersError;
-      groups?.push({ created_at: new Date(), id: data?.[0].id, name });
+      setGroups((prev) => [
+        ...(prev || []),
+        { created_at: new Date(), id: data?.[0].id, name },
+      ]);
       setLoading(false);
       closeModal();
       toast.success("Group created successfully!");
@@ -109,24 +113,9 @@ const GroupsTable: React.FC<Props> = ({ groups, users }) => {
               }))}
             />
           </div>
-          <button
-            type="button"
-            onClick={handleCreate}
-            disabled={loading}
-            className="inline-flex mt-2 justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none sm:text-sm disabled:opacity-50"
-          >
-            {loading ? (
-              <RotatingLines
-                strokeColor="grey"
-                strokeWidth="2"
-                animationDuration="0.75"
-                width="16"
-                visible={true}
-              />
-            ) : (
-              "Create"
-            )}
-          </button>
+          <Button loading={loading} onClick={handleCreate}>
+            Create
+          </Button>
         </form>
       </Modal>
     </>
