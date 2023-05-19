@@ -41,3 +41,8 @@ export type TaskInstance = {
   task_parent_id: number;
   body: any;
 };
+
+export type TaskBody = {
+  type: "boolean" | "string";
+  title: string;
+};

@@ -1,7 +1,7 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
-import { Group, User } from "../../../lib/types";
+import { Group, Project, User } from "../../../lib/types";
 import Button from "../../ui/Button";
 import Modal from "../../ui/Modal";
 import MultiSelect from "../../ui/MultiSelect";
@@ -13,10 +13,16 @@ import GroupRow from "./GroupRow";
 type Props = {
   groups: Group[] | undefined;
   users: User[] | undefined;
+  projects: Project[] | undefined;
   setGroups: React.Dispatch<React.SetStateAction<Group[] | undefined>>;
 };
 
-const GroupsTable: React.FC<Props> = ({ groups, users, setGroups }) => {
+const GroupsTable: React.FC<Props> = ({
+  groups,
+  users,
+  setGroups,
+  projects,
+}) => {
   const supabase = useSupabaseClient();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -74,7 +80,9 @@ const GroupsTable: React.FC<Props> = ({ groups, users, setGroups }) => {
           />
         )}
         {groups ? (
-          groups.map((group) => <GroupRow key={group.id} group={group} />)
+          groups.map((group) => (
+            <GroupRow key={group.id} group={group} projects={projects} />
+          ))
         ) : (
           <TableLoading colSpan={4} />
         )}

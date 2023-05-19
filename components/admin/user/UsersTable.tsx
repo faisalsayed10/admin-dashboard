@@ -1,7 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
 import { toast } from "react-hot-toast";
-import { User } from "../../../lib/types";
+import { Project, User } from "../../../lib/types";
 import Button from "../../ui/Button";
 import Table from "../../ui/Table";
 import TableEmpty from "../../ui/TableEmpty";
@@ -10,9 +10,10 @@ import UserRow from "./UserRow";
 
 type Props = {
   users: User[] | undefined;
+  projects: Project[] | undefined;
 };
 
-const UsersTable: React.FC<Props> = ({ users }) => {
+const UsersTable: React.FC<Props> = ({ users, projects }) => {
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
@@ -49,7 +50,7 @@ const UsersTable: React.FC<Props> = ({ users }) => {
           <TableEmpty colSpan={3} message="No users found." />
         )}
         {users ? (
-          users.map((person) => <UserRow key={person.id} person={person} />)
+          users.map((person) => <UserRow key={person.id} person={person} projects={projects} />)
         ) : (
           <TableLoading colSpan={3} />
         )}

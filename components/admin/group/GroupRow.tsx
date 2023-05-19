@@ -3,23 +3,19 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Group, Member, Project } from "../../../lib/types";
 
-const GroupRow = ({ group }: { group: Group }) => {
+const GroupRow = ({
+  group,
+  projects,
+}: {
+  group: Group;
+  projects?: Project[];
+}) => {
   const [members, setMembers] = useState<Member[]>();
-  const [projects, setProjects] = useState<Project[]>();
   const supabase = useSupabaseClient();
 
   useEffect(() => {
     (async () => {
       try {
-        const { data, error } = await supabase
-          .from("projects")
-          .select("*")
-          .filter("assigned_group", "eq", group.id);
-
-        if (error) throw error;
-
-        setProjects(data as Project[]);
-
         const { data: membersData, error: membersError } = await supabase
           .from("members")
           .select("*")
@@ -50,7 +46,8 @@ const GroupRow = ({ group }: { group: Group }) => {
         align="center"
         className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
       >
-        {projects?.length || 0}
+        {projects?.filter((p) => p?.assigned_group?.id === group.id).length ||
+          0}
       </td>
       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
         <a href="#" className="text-indigo-600 hover:text-indigo-900">
