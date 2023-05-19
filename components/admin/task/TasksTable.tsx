@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Project, Task } from "../../../lib/types";
+import { Project, Task, TaskBody } from "../../../lib/types";
 import Button from "../../ui/Button";
 import Modal from "../../ui/Modal";
 import Table from "../../ui/Table";
@@ -9,39 +9,70 @@ import TaskRow from "./TaskRow";
 import SingleSelect from "../../ui/SingleSelect";
 import { MinusCircleIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-hot-toast";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 type Props = {
   tasks: Task[] | undefined;
   projects: Project[] | undefined;
+  setTasks: React.Dispatch<React.SetStateAction<Task[] | undefined>>;
 };
 
-type TaskBody = {
-  type: "boolean" | "string";
-  title: string;
-};
-
-const TasksTable: React.FC<Props> = ({ tasks, projects }) => {
+const TasksTable: React.FC<Props> = ({ tasks, projects, setTasks }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [body, setBody] = useState<TaskBody[]>([]);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<string>("");
+  const supabase = useSupabaseClient();
 
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
 
   const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const data = { name, description: desc, project: selected, body };
-
     try {
+      e.preventDefault();
       setLoading(true);
 
-      // TODO: Create task
+      const { data, error } = await supabase
+        .from("tasks")
+        .insert([{ name, description: desc, project_id: selected, body }])
+        .select("id");
 
-      closeModal();
+      if (error) throw error;
+
+      // const selected_project = (projects || []).find(
+      //   (p) => p.id === Number(selected)
+      // );
+
+      // const res = await fetch("/api/tasks", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     task_id: data?.[0].id,
+      //     assigned_id:
+      //       selected_project?.assigned_group?.id ||
+      //       selected_project?.assigned_user?.id,
+      //     body,
+      //   }),
+      // });
+
+      // if (!res.ok) throw new Error("Something went wrong.");
+
+      setTasks((prev) => [
+        ...(prev || []),
+        {
+          id: data?.[0].id,
+          name,
+          description: desc,
+          project_id: Number(selected),
+          body,
+          created_at: new Date(),
+        },
+      ]);
+
       setLoading(false);
+      closeModal();
       setName("");
       setDesc("");
       setBody([]);
@@ -57,7 +88,6 @@ const TasksTable: React.FC<Props> = ({ tasks, projects }) => {
   return (
     <>
       <Table
-        hasEndButton
         button="Create task"
         cols={["Name", "Description", "Body", "Project", "Submissions"]}
         description="A list of all the tasks currently in the system."
@@ -65,12 +95,12 @@ const TasksTable: React.FC<Props> = ({ tasks, projects }) => {
         onBtnClick={openModal}
       >
         {tasks && tasks.length < 1 && (
-          <TableEmpty colSpan={6} message="No tasks found. Create a task." />
+          <TableEmpty colSpan={5} message="No tasks found. Create a task." />
         )}
         {tasks ? (
-          tasks.map((task, i) => <TaskRow key={task.id} task={task} />)
+          tasks.map((task, i) => <TaskRow key={task.id} task={task} projects={projects} />)
         ) : (
-          <TableLoading colSpan={6} />
+          <TableLoading colSpan={5} />
         )}
       </Table>
       <Modal
