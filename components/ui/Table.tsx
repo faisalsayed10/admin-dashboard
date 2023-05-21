@@ -4,7 +4,7 @@ type Props = {
   heading: string;
   description: string;
   button?: string;
-  onBtnClick: () => void;
+  onBtnClick?: () => void;
   cols: string[];
   hasEndButton?: boolean;
 };
@@ -30,13 +30,13 @@ const Table: React.FC<PropsWithChildren<Props>> = (props) => {
           <p className="mt-2 text-sm text-gray-700">{description}</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <button
+          {button && <button
             type="button"
             onClick={onBtnClick}
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             {button}
-          </button>
+          </button>}
         </div>
       </div>
       <div className="mt-8 flow-root">

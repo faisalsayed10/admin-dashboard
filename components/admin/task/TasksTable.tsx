@@ -41,24 +41,6 @@ const TasksTable: React.FC<Props> = ({ tasks, projects, setTasks }) => {
 
       if (error) throw error;
 
-      // const selected_project = (projects || []).find(
-      //   (p) => p.id === Number(selected)
-      // );
-
-      // const res = await fetch("/api/tasks", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     task_id: data?.[0].id,
-      //     assigned_id:
-      //       selected_project?.assigned_group?.id ||
-      //       selected_project?.assigned_user?.id,
-      //     body,
-      //   }),
-      // });
-
-      // if (!res.ok) throw new Error("Something went wrong.");
-
       setTasks((prev) => [
         ...(prev || []),
         {
