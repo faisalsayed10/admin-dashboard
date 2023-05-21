@@ -29,7 +29,7 @@ export type Task = {
   id: number;
   name: string;
   description: string;
-  body: any;
+  body: TaskBody[];
   created_at: Date;
   project_id: number;
 };
@@ -39,10 +39,20 @@ export type TaskInstance = {
   created_at: Date;
   user_id: string;
   task_parent_id: number;
-  body: any;
+  body: TaskBody[];
 };
 
 export type TaskBody = {
   type: "boolean" | "string";
   title: string;
+  response: string | boolean;
+};
+
+export type TaskWithProject = Task & {
+  project_id: {
+    id: number;
+    name: string;
+    assigned_user: { id: string; email: string };
+    assigned_group: { id: number; name: string };
+  };
 };
