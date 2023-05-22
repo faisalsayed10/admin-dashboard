@@ -1,16 +1,18 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
-import { Group, Project, User } from "../../../lib/types";
-import Button from "../../ui/Button";
-import Modal from "../../ui/Modal";
-import SingleSelect from "../../ui/SingleSelect";
-import Table from "../../ui/Table";
-import TableEmpty from "../../ui/TableEmpty";
-import TableLoading from "../../ui/TableLoading";
+import { Group, Project, User } from "../../lib/types";
+import Button from "../ui/Button";
+import Modal from "../ui/Modal";
+import SingleSelect from "../ui/SingleSelect";
+import Table from "../ui/Table";
+import TableEmpty from "../ui/TableEmpty";
+import TableLoading from "../ui/TableLoading";
 import ProjectRow from "./ProjectRow";
+import TableShowMore from "../ui/TableShowMore";
 
 type Props = {
+  limit?: number;
   projects: Project[] | undefined;
   users: User[] | undefined;
   groups: Group[] | undefined;
@@ -18,7 +20,7 @@ type Props = {
 };
 
 const ProjectsTable: React.FC<Props> = (props) => {
-  const { projects, users, groups, setProjects } = props;
+  const { projects, users, groups, setProjects, limit } = props;
   const supabase = useSupabaseClient();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -81,16 +83,21 @@ const ProjectsTable: React.FC<Props> = (props) => {
           />
         )}
         {projects ? (
-          projects.map((p) => (
-            <ProjectRow
-              key={p.id}
-              project={p}
-              users={users || []}
-              groups={groups || []}
-            />
-          ))
+          <>
+            {projects.slice(0, limit).map((p) => (
+              <ProjectRow
+                key={p.id}
+                project={p}
+                users={users || []}
+                groups={groups || []}
+              />
+            ))}
+            {limit && projects.length > limit && (
+              <TableShowMore colSpan={2} href="/users" />
+            )}
+          </>
         ) : (
-          <TableLoading colSpan={3} />
+          <TableLoading colSpan={2} />
         )}
       </Table>
 

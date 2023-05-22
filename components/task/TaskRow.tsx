@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Project, Task } from "../../../lib/types";
-import Modal from "../../ui/Modal";
+import { Project, Task } from "../../lib/types";
+import Modal from "../ui/Modal";
 
 type Props = {
   task: Task;

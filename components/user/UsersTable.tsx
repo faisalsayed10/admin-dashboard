@@ -1,19 +1,21 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
 import { toast } from "react-hot-toast";
-import { Project, User } from "../../../lib/types";
-import Button from "../../ui/Button";
-import Table from "../../ui/Table";
-import TableEmpty from "../../ui/TableEmpty";
-import TableLoading from "../../ui/TableLoading";
+import { Project, User } from "../../lib/types";
+import Button from "../ui/Button";
+import Table from "../ui/Table";
+import TableEmpty from "../ui/TableEmpty";
+import TableLoading from "../ui/TableLoading";
 import UserRow from "./UserRow";
+import TableShowMore from "../ui/TableShowMore";
 
 type Props = {
+  limit?: number;
   users: User[] | undefined;
   projects: Project[] | undefined;
 };
 
-const UsersTable: React.FC<Props> = ({ users, projects }) => {
+const UsersTable: React.FC<Props> = ({ users, projects, limit }) => {
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
@@ -50,7 +52,12 @@ const UsersTable: React.FC<Props> = ({ users, projects }) => {
           <TableEmpty colSpan={3} message="No users found." />
         )}
         {users ? (
-          users.map((person) => <UserRow key={person.id} person={person} projects={projects} />)
+          <>
+            {users.slice(0, limit).map((person) => (
+              <UserRow key={person.id} person={person} projects={projects} />
+            ))}
+            {limit && users.length > limit && <TableShowMore colSpan={3} href="/users" />}
+          </>
         ) : (
           <TableLoading colSpan={3} />
         )}

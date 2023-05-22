@@ -2,10 +2,10 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { Project } from "../../../lib/types";
-import Button from "../../ui/Button";
-import Modal from "../../ui/Modal";
-import SingleSelect from "../../ui/SingleSelect";
+import { Project } from "../../lib/types";
+import Button from "../ui/Button";
+import Modal from "../ui/Modal";
+import SingleSelect from "../ui/SingleSelect";
 
 type Props = {
   project: Project;

@@ -1,8 +1,8 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
-import { TaskInstance, TaskWithProject } from "../../../lib/types";
-import Button from "../../ui/Button";
-import Modal from "../../ui/Modal";
+import { TaskInstance, TaskWithProject } from "../../lib/types";
+import Button from "../ui/Button";
+import Modal from "../ui/Modal";
 import { toast } from "react-hot-toast";
 import dayjs from "dayjs";
 

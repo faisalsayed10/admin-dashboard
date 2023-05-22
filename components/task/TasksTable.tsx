@@ -1,20 +1,25 @@
-import { MinusCircleIcon } from "@heroicons/react/24/outline";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useState } from "react";
-import { TaskBody, TaskWithProject } from "../../../lib/types";
-import Button from "../../ui/Button";
-import Modal from "../../ui/Modal";
-import SingleSelect from "../../ui/SingleSelect";
-import Table from "../../ui/Table";
-import TableEmpty from "../../ui/TableEmpty";
-import TableLoading from "../../ui/TableLoading";
-import UserTaskRow from "./UserTaskRow";
+import { Project, Task, TaskBody } from "../../lib/types";
+import Button from "../ui/Button";
+import Modal from "../ui/Modal";
+import Table from "../ui/Table";
+import TableEmpty from "../ui/TableEmpty";
+import TableLoading from "../ui/TableLoading";
+import TaskRow from "./TaskRow";
+import SingleSelect from "../ui/SingleSelect";
+import { MinusCircleIcon } from "@heroicons/react/24/outline";
+import { toast } from "react-hot-toast";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import TableShowMore from "../ui/TableShowMore";
 
 type Props = {
-  tasks: TaskWithProject[] | undefined;
+  limit?: number;
+  tasks: Task[] | undefined;
+  projects: Project[] | undefined;
+  setTasks: React.Dispatch<React.SetStateAction<Task[] | undefined>>;
 };
 
-const UserTasksTable: React.FC<Props> = ({ tasks }) => {
+const TasksTable: React.FC<Props> = ({ tasks, projects, setTasks, limit }) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
@@ -26,23 +31,67 @@ const UserTasksTable: React.FC<Props> = ({ tasks }) => {
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
 
-  const handleCreate = async (e: React.FormEvent) => {};
+  const handleCreate = async (e: React.FormEvent) => {
+    try {
+      e.preventDefault();
+      setLoading(true);
+
+      const { data, error } = await supabase
+        .from("tasks")
+        .insert([{ name, description: desc, project_id: selected, body }])
+        .select("id");
+
+      if (error) throw error;
+
+      setTasks((prev) => [
+        ...(prev || []),
+        {
+          id: data?.[0].id,
+          name,
+          description: desc,
+          project_id: Number(selected),
+          body,
+          created_at: new Date(),
+        },
+      ]);
+
+      setLoading(false);
+      closeModal();
+      setName("");
+      setDesc("");
+      setBody([]);
+      setSelected("");
+      toast.success("Task created successfully.");
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong.");
+      setLoading(false);
+    }
+  };
 
   return (
     <>
       <Table
-        cols={["Name", "Description", "Project", "Assigned To", "Response"]}
-        description="A list of all the tasks currently assigned to you."
-        heading="My Tasks"
-        hasEndButton
+        button="Create task"
+        cols={["Name", "Description", "Body", "Project", "Submissions"]}
+        description="A list of all the tasks currently in the system."
+        heading="Tasks"
+        onBtnClick={openModal}
       >
         {tasks && tasks.length < 1 && (
-          <TableEmpty colSpan={6} message="No tasks found. Create a task." />
+          <TableEmpty colSpan={5} message="No tasks found. Create a task." />
         )}
         {tasks ? (
-          tasks.map((task, i) => <UserTaskRow key={task.id} task={task} />)
+          <>
+            {tasks.slice(0, limit).map((task) => (
+              <TaskRow key={task.id} task={task} projects={projects} />
+            ))}
+            {limit && tasks.length > limit && (
+              <TableShowMore colSpan={5} href="/users" />
+            )}
+          </>
         ) : (
-          <TableLoading colSpan={6} />
+          <TableLoading colSpan={5} />
         )}
       </Table>
       <Modal
@@ -80,7 +129,7 @@ const UserTasksTable: React.FC<Props> = ({ tasks }) => {
               className="relative w-full shadow appearance-none border rounded py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline placeholder:text-gray-400 bg-white pl-3 pr-10 text-left focus-visible:border-indigo-500 focus-visible:ring-0 sm:text-sm"
             />
           </div>
-          {/* <div className="mb-4">
+          <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Project
             </label>
@@ -96,7 +145,7 @@ const UserTasksTable: React.FC<Props> = ({ tasks }) => {
                 })`,
               }))}
             />
-          </div> */}
+          </div>
           <div className="mb-2">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Body
@@ -169,4 +218,4 @@ const UserTasksTable: React.FC<Props> = ({ tasks }) => {
   );
 };
 
-export default UserTasksTable;
+export default TasksTable;

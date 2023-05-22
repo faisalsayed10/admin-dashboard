@@ -1,7 +1,8 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { Group, Member, Project } from "../../../lib/types";
+import { Group, Member, Project } from "../../lib/types";
+import Link from "next/link";
 
 const GroupRow = ({
   group,
@@ -36,23 +37,17 @@ const GroupRow = ({
       <td className="whitespace-nowrap truncate max-w-[185px] capitalize px-3 py-4 text-sm text-gray-900 font-medium">
         {group.name}
       </td>
-      <td
-        align="center"
-        className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-      >
+      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
         {members?.length || 0}
       </td>
-      <td
-        align="center"
-        className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-      >
+      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
         {projects?.filter((p) => p?.assigned_group?.id === group.id).length ||
           0}
       </td>
       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-          View
-        </a>
+        <Link href={`/groups/${group.id}`}>
+          <span className="text-indigo-600 hover:text-indigo-900 cursor-pointer">View</span>
+        </Link>
       </td>
     </tr>
   );

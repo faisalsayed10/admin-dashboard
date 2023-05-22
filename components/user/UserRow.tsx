@@ -1,4 +1,4 @@
-import { Project, User } from "../../../lib/types";
+import { Project, User } from "../../lib/types";
 
 const UserRow = ({
   person,
@@ -12,7 +12,7 @@ const UserRow = ({
       <td className="whitespace-nowrap truncate max-w-[250px] px-3 py-4 text-sm text-gray-900 font-medium">
         {person.email}
       </td>
-      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+      <td className="whitespace-nowrap capitalize px-3 py-4 text-sm text-gray-500">
         {person.role}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

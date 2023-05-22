@@ -1,23 +1,26 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
-import { Group, Project, User } from "../../../lib/types";
-import Button from "../../ui/Button";
-import Modal from "../../ui/Modal";
-import MultiSelect from "../../ui/MultiSelect";
-import Table from "../../ui/Table";
-import TableEmpty from "../../ui/TableEmpty";
-import TableLoading from "../../ui/TableLoading";
+import { Group, Project, User } from "../../lib/types";
+import Button from "../ui/Button";
+import Modal from "../ui/Modal";
+import MultiSelect from "../ui/MultiSelect";
+import Table from "../ui/Table";
+import TableEmpty from "../ui/TableEmpty";
+import TableLoading from "../ui/TableLoading";
 import GroupRow from "./GroupRow";
+import TableShowMore from "../ui/TableShowMore";
 
 type Props = {
   groups: Group[] | undefined;
   users: User[] | undefined;
   projects: Project[] | undefined;
   setGroups: React.Dispatch<React.SetStateAction<Group[] | undefined>>;
+  limit?: number;
 };
 
 const GroupsTable: React.FC<Props> = ({
+  limit,
   groups,
   users,
   setGroups,
@@ -80,9 +83,14 @@ const GroupsTable: React.FC<Props> = ({
           />
         )}
         {groups ? (
-          groups.map((group) => (
-            <GroupRow key={group.id} group={group} projects={projects} />
-          ))
+          <>
+            {groups.slice(0, limit).map((group) => (
+              <GroupRow key={group.id} group={group} projects={projects} />
+            ))}
+            {limit && groups.length > limit && (
+              <TableShowMore colSpan={4} href="/users" />
+            )}
+          </>
         ) : (
           <TableLoading colSpan={4} />
         )}
