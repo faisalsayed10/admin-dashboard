@@ -1,7 +1,7 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { TaskWithProject } from "../lib/types";
-import UserTasksTable from "./admin/task/UserTasksTable";
+import UserTasksTable from "./task/UserTasksTable";
 
 const UserDashboard = () => {
   const [tasks, setTasks] = useState<TaskWithProject[]>();

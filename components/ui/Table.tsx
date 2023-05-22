@@ -7,6 +7,7 @@ type Props = {
   onBtnClick?: () => void;
   cols: string[];
   hasEndButton?: boolean;
+  scrollable?: boolean;
 };
 
 const Table: React.FC<PropsWithChildren<Props>> = (props) => {
@@ -18,6 +19,7 @@ const Table: React.FC<PropsWithChildren<Props>> = (props) => {
     cols,
     hasEndButton,
     children,
+    scrollable,
   } = props;
 
   return (
@@ -30,23 +32,27 @@ const Table: React.FC<PropsWithChildren<Props>> = (props) => {
           <p className="mt-2 text-sm text-gray-700">{description}</p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          {button && <button
-            type="button"
-            onClick={onBtnClick}
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            {button}
-          </button>}
+          {button && (
+            <button
+              type="button"
+              onClick={onBtnClick}
+              className={`block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+                scrollable && "max-h-[400px]"
+              }`}
+            >
+              {button}
+            </button>
+          )}
         </div>
       </div>
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <div className="shadow overflow-x-hidden ring-1 ring-black ring-opacity-5 sm:rounded-lg max-h-[400px] block">
+            <div className="shadow overflow-x-hidden ring-1 ring-black ring-opacity-5 sm:rounded-lg block">
               <table className="min-w-full divide-y divide-gray-300">
                 <thead className="bg-gray-50 sticky top-0">
                   <tr>
-                    {cols.map((col, i) => (
+                    {cols.map((col) => (
                       <th
                         key={col}
                         scope="col"
