@@ -34,8 +34,8 @@ const GroupId = () => {
 
   return (
     <Layout>
-      <h1 className="text-3xl mx-4 sm:mx-6 lg:mx-8 font-bold text-gray-900 mb-4">
-        {group?.name}
+      <h1 className="text-3xl mx-4 sm:mx-6 lg:mx-8 font-bold text-gray-900 mb-4 capitalize">
+        {group?.name || "Loading..."}
       </h1>
 
       <MembersTable />
