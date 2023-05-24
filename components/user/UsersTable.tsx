@@ -43,10 +43,10 @@ const UsersTable: React.FC<Props> = ({ users, projects, limit }) => {
     <>
       <Table
         button="Invite users"
-        cols={["Email", "Role", "Tasks"]}
+        cols={["Email", "Role", "Projects"]}
         description="A list of all the users currently in the system."
         heading="Users"
-        onBtnClick={openModal}
+        btnProps={{ onClick: openModal }}
       >
         {users && users.length < 1 && (
           <TableEmpty colSpan={3} message="No users found." />
@@ -56,7 +56,9 @@ const UsersTable: React.FC<Props> = ({ users, projects, limit }) => {
             {users.slice(0, limit).map((person) => (
               <UserRow key={person.id} person={person} projects={projects} />
             ))}
-            {limit && users.length > limit && <TableShowMore colSpan={3} href="/users" />}
+            {limit && users.length > limit && (
+              <TableShowMore colSpan={3} href="/users" />
+            )}
           </>
         ) : (
           <TableLoading colSpan={3} />

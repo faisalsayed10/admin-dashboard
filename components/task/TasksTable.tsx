@@ -76,7 +76,7 @@ const TasksTable: React.FC<Props> = ({ tasks, projects, setTasks, limit }) => {
         cols={["Name", "Description", "Body", "Project", "Submissions"]}
         description="A list of all the tasks currently in the system."
         heading="Tasks"
-        onBtnClick={openModal}
+        btnProps={{ onClick: openModal }}
       >
         {tasks && tasks.length < 1 && (
           <TableEmpty colSpan={5} message="No tasks found. Create a task." />

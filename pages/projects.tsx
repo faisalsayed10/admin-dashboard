@@ -3,6 +3,8 @@ import ProjectsTable from "../components/project/ProjectsTable";
 import { getAllGroups, getAllProjects, getAllUsers } from "../lib/supabase";
 import { Group, Project, User } from "../lib/types";
 import Layout from "../components/Layout";
+import { GetServerSidePropsContext } from "next";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const Projects = () => {
   const [groups, setGroups] = useState<Group[] | undefined>();
@@ -27,6 +29,22 @@ const Projects = () => {
       />
     </Layout>
   );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const supabase = createServerSupabaseClient(ctx);
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: { destination: "/login", permanent: false },
+    };
+
+  return {
+    props: { initialSession: session, user: session.user },
+  };
 };
 
 export default Projects;

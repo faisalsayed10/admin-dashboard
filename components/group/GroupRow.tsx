@@ -1,8 +1,8 @@
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { getAllMembers } from "../../lib/supabase";
 import { Group, Member, Project } from "../../lib/types";
-import Link from "next/link";
 
 const GroupRow = ({
   group,
@@ -12,19 +12,11 @@ const GroupRow = ({
   projects?: Project[];
 }) => {
   const [members, setMembers] = useState<Member[]>();
-  const supabase = useSupabaseClient();
 
   useEffect(() => {
     (async () => {
       try {
-        const { data: membersData, error: membersError } = await supabase
-          .from("members")
-          .select("*")
-          .filter("group_id", "eq", group.id);
-
-        if (membersError) throw membersError;
-
-        setMembers(membersData as Member[]);
+        setMembers(await getAllMembers(group.id));
       } catch (err) {
         console.error(err);
         toast.error("Error fetching projects");
@@ -46,7 +38,9 @@ const GroupRow = ({
       </td>
       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
         <Link href={`/groups/${group.id}`}>
-          <span className="text-indigo-600 hover:text-indigo-900 cursor-pointer">View</span>
+          <span className="text-indigo-600 hover:text-indigo-900 cursor-pointer">
+            View
+          </span>
         </Link>
       </td>
     </tr>

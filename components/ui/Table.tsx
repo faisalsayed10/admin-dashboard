@@ -4,7 +4,7 @@ type Props = {
   heading: string;
   description: string;
   button?: string;
-  onBtnClick?: () => void;
+  btnProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
   cols: string[];
   hasEndButton?: boolean;
   scrollable?: boolean;
@@ -15,7 +15,7 @@ const Table: React.FC<PropsWithChildren<Props>> = (props) => {
     heading,
     description,
     button,
-    onBtnClick,
+    btnProps,
     cols,
     hasEndButton,
     children,
@@ -35,12 +35,12 @@ const Table: React.FC<PropsWithChildren<Props>> = (props) => {
           {button && (
             <button
               type="button"
-              onClick={onBtnClick}
-              className={`block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+              {...btnProps}
+              className={`block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 ${
                 scrollable && "max-h-[400px]"
               }`}
             >
-              {button}
+              {btnProps?.children || button}
             </button>
           )}
         </div>

@@ -20,7 +20,7 @@ const Button: React.FC<PropsWithChildren<Props>> = ({
         variant === "primary"
           ? "border border-transparent bg-indigo-600 text-white hover:bg-indigo-700"
           : "border border-gray-300 text-gray-700 hover:bg-gray-50"
-      } focus:outline-none sm:text-sm disabled:opacity-50`}
+      } focus:outline-none sm:text-sm disabled:opacity-50 ${props.className}`}
     >
       {loading ? (
         <RotatingLines

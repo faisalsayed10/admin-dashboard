@@ -74,7 +74,7 @@ const ProjectsTable: React.FC<Props> = (props) => {
         cols={["Name", "Assigned to"]}
         description="A list of all the projects currently in the system."
         heading="Projects"
-        onBtnClick={openModal}
+        btnProps={{ onClick: openModal }}
       >
         {projects && projects.length < 1 && (
           <TableEmpty

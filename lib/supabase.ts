@@ -1,4 +1,4 @@
-import { Group, Project, Task, User } from "./types";
+import { Group, Member, Project, Task, User } from "./types";
 import { toast } from "react-hot-toast";
 import { createClient } from "@supabase/supabase-js";
 
@@ -39,6 +39,20 @@ export const getAllUsers = async () => {
     let { data, error, status } = await supabase.from("users").select(`*`);
     if (error && status !== 406) throw error;
     return data as User[];
+  } catch (error: any) {
+    console.error(error);
+    toast.error(`An error occurred: ${error.message}`);
+  }
+};
+
+export const getAllMembers = async (group_id: number) => {
+  try {
+    let { data, error, status } = await supabase
+      .from("members")
+      .select(`*`)
+      .filter("group_id", "eq", group_id);
+    if (error && status !== 406) throw error;
+    return data as Member[];
   } catch (error: any) {
     console.error(error);
     toast.error(`An error occurred: ${error.message}`);

@@ -71,10 +71,10 @@ const GroupsTable: React.FC<Props> = ({
       <Table
         hasEndButton
         button="Create group"
-        cols={["Name", "Members", "Tasks"]}
+        cols={["Name", "Members", "Projects"]}
         description="A list of all the groups currently in the system."
         heading="Groups"
-        onBtnClick={openModal}
+        btnProps={{ onClick: openModal }}
       >
         {groups && groups.length < 1 && (
           <TableEmpty
