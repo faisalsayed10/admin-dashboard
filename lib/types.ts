@@ -52,7 +52,7 @@ export type TaskWithProject = Task & {
   project_id: {
     id: number;
     name: string;
-    assigned_user: { id: string; email: string };
-    assigned_group: { id: number; name: string };
+    assigned_user: User;
+    assigned_group: Group;
   };
 };

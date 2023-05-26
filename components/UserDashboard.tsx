@@ -25,7 +25,6 @@ const UserDashboard = () => {
         .filter("user_id", "eq", user.id);
 
       if (error || groupsError) throw error || groupsError;
-      console.log(data);
 
       const filteredTasks = (data as TaskWithProject[]).filter((task) => {
         if (task.project_id.assigned_user?.id === user.id) return true;
