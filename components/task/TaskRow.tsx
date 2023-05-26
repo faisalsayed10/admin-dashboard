@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Project, Task } from "../../lib/types";
 import Modal from "../ui/Modal";
+import Link from "next/link";
 
 type Props = {
   task: Task;
@@ -34,9 +35,11 @@ const TaskRow: React.FC<Props> = ({ task, projects }) => {
           {projects?.find((p) => p.id === task.project_id)?.name}
         </td>
         <td className="flex relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-          <a href="#" className="text-indigo-600 hover:text-indigo-900">
-            View
-          </a>
+          <Link href={`/tasks/${task.id}`}>
+            <span className="text-indigo-600 hover:text-indigo-900 cursor-pointer">
+              View
+            </span>
+          </Link>
         </td>
       </tr>
       <Modal open={open} closeModal={onClose} title="Task Body" scroll>
